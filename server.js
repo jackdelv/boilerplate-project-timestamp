@@ -19,19 +19,23 @@ app.get("/", function (req, res) {
 });
 
 app.get('/api/:date', function(req, res, done) {
-  if (req.params.date){
-    var date = new Date(req.params.date);
-  } else {
-    var date = new Date();
-  }
+  var date = new Date(req.params.date);
+  
   if (date.toString() == 'Invalid Date'){
-    res.json({error: date.toString()});
+    date = new Date(parseInt(req.params.date));
+  }
+  
+  if (date.toString() == 'Invalid Date'){
+      res.json({error: date.toString()});  
   } else {
-    res.json({unix: date.now(), utc: date.UTC(), });
+    res.json({unix: date.getTime(), utc: date.toUTCString(), });
   }
 });
 
-
+app.get('/api', function(req, res, done) {
+  var date = new Date();
+  res.json({unix: date.getTime(), utc: date.toUTCString(), });
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
